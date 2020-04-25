@@ -22,29 +22,35 @@ public class Hr implements UserDetails {
     private List<Role> roles;
     private String userface;
     private String token;
+
     @Override
     public boolean isEnabled() {
         return enabled;
     }
+
     @Override
     public String getUsername() {
         return username;
     }
+
     @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
+
     @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
+
     @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -54,6 +60,7 @@ public class Hr implements UserDetails {
         }
         return authorities;
     }
+
     @JsonIgnore
     @Override
     public String getPassword() {
@@ -119,7 +126,6 @@ public class Hr implements UserDetails {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-
 
     public void setUsername(String username) {
         this.username = username;
