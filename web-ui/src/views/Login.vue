@@ -15,6 +15,8 @@
 </template>
 
 <script>
+    import {postKeyValueResquest} from "../utils/api";
+
     export default {
         name: "Login",
         data() {
@@ -34,7 +36,13 @@
             submitLogin() {
                 this.$refs.loginForm.validate((valid) => {
                     if(valid) {
-                        alert('submit!');
+                        postKeyValueResquest('/doLogin', this.loginForm).then(resp => {
+                            if (resp) {
+                                window.sessionStorage.setItem("user", JSON.stringify(resp.obj));
+                                this.$router.replace('/home');
+                            }
+                        })
+                        //alert('submit!');
                     } else {
                         this.$message.error('请输入所有字段');
                         return false;
