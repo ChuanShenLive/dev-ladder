@@ -2,103 +2,37 @@ package org.chuanshen.devladder.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import lombok.Data;
 import java.io.Serializable;
 import java.util.List;
 
+@Data
 public class Menu implements Serializable {
+
     private Long id;
-    private String url;
-    private String path;
-    private Object component;
-    private String name;
-    private String iconCls;
-    private Long parentId;
-    private List<Role> roles;
-    private List<Menu> children;
-    private MenuMeta meta;
-
-    public MenuMeta getMeta() {
-        return meta;
-    }
-
-    public void setMeta(MenuMeta meta) {
-        this.meta = meta;
-    }
-
-    public List<Menu> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<Menu> children) {
-        this.children = children;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     @JsonIgnore
-    public String getUrl() {
-        return url;
-    }
+    private String url;
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
+    private String path;
 
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-    public Object getComponent() {
-        return component;
-    }
+    private Object component;
 
-    public void setComponent(Object component) {
-        this.component = component;
-    }
+    private String name;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getIconCls() {
-        return iconCls;
-    }
-
-    public void setIconCls(String iconCls) {
-        this.iconCls = iconCls;
-    }
+    private String iconCls;
 
     @JsonIgnore
-    public Long getParentId() {
-        return parentId;
-    }
+    private Long parentId;
 
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
+    private Meta meta;
+
+    private Boolean enabled;
 
     @JsonIgnore
-    public List<Role> getRoles() {
-        return roles;
-    }
+    private List<Role> roles;
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
+    private List<Menu> children;
+
 }

@@ -2,7 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="org.chuanshen.devladder.mapper.MenuMapper">
+
     <resultMap id="BaseResultMap" type="org.chuanshen.devladder.model.Menu">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="url" property="url" jdbcType="VARCHAR"/>
@@ -10,11 +12,11 @@
         <result column="component" property="component" javaType="java.lang.Object"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="iconCls" property="iconCls" jdbcType="VARCHAR"/>
-        <result column="keepAlive" property="keepAlive" jdbcType="BIT"/>
         <result column="parentId" property="parentId" jdbcType="INTEGER"/>
-        <association property="meta" javaType="org.chuanshen.devladder.model.MenuMeta">
-            <result column="keepAlive" property="keepAlive"/>
-            <result column="requireAuth" property="requireAuth"/>
+        <result column="enabled" property="enabled" jdbcType="BIT"/>
+        <association property="meta" javaType="org.chuanshen.devladder.model.Meta">
+            <result column="keepAlive" property="keepAlive" jdbcType="BIT"/>
+            <result column="requireAuth" property="requireAuth" jdbcType="BIT"/>
         </association>
         <collection property="roles" ofType="org.chuanshen.devladder.model.Role">
             <id column="rid" property="id"/>
@@ -27,7 +29,7 @@
             <result column="component2" property="component" jdbcType="VARCHAR"/>
             <result column="name2" property="name" jdbcType="VARCHAR"/>
             <result column="iconCls2" property="iconCls" jdbcType="VARCHAR"/>
-            <association property="meta" javaType="org.chuanshen.devladder.model.MenuMeta">
+            <association property="meta" javaType="org.chuanshen.devladder.model.Meta">
                 <result column="keepAlive2" property="keepAlive"/>
                 <result column="requireAuth2" property="requireAuth"/>
             </association>
@@ -37,16 +39,103 @@
             </collection>
         </collection>
     </resultMap>
+
     <select id="getAllMenu" resultMap="BaseResultMap">
-        select m.*,r.`id` as rid,r.`name` as rname,r.`nameZh` as rnamezh from menu m left join menu_role mr on m.`id`=mr.`mid` left join role r on mr.`rid`=r.`id` WHERE m.`enabled`=true order by m.`id` desc
+        SELECT
+            m.*,
+            r.`id` AS rid,
+            r.`name` AS rname,
+            r.`nameZh` AS rnamezh
+        FROM menu m
+            LEFT JOIN menu_role mr ON m.`id`=mr.`mid`
+            LEFT JOIN role r ON mr.`rid`=r.`id`
+        WHERE m.`enabled`=true
+        ORDER BY m.`id` DESC
     </select>
+
+    <select id="getMenusByHrId" parameterType="Long" resultMap="menuMapDeep2">
+        SELECT DISTINCT
+            m1.`id` AS 'id',
+            m1.`url` AS 'url',
+            m1.`path` AS 'path',
+            m1.`component` AS 'component',
+            m1.`name` AS 'name',
+            m1.`iconCls` AS 'iconCls',
+            m1.`keepAlive` AS 'keepAlive',
+            m1.`requireAuth` AS 'requreAuth',
+            m2.`id` AS 'children.id',
+            m2.`url` AS 'children.url',
+            m2.`path` AS 'children.path',
+            m2.`component` AS 'children.component',
+            m2.`name` AS 'children.name',
+            m2.`iconCls` AS 'children.iconCls',
+            m2.`keepAlive` AS 'children.keepAlive',
+            m2.`requireAuth` AS 'children.requireAuth'
+        FROM
+            menu m1
+        LEFT JOIN menu m2 ON m1.id = m2.parentId
+        LEFT JOIN menu_role mr ON mr.mid = m2.id
+        LEFT JOIN hr_role hrr ON hrr.rid = mr.rid
+        WHERE
+                hrr.hrid = {hrId}
+            AND m2.enabled = TRUE
+        ORDER BY
+            'id',
+            'children.id'
+    </select>
+    <!--
     <select id="getMenusByHrId" parameterType="Long" resultMap="BaseResultMap">
-        select m1.`id`,m1.`path`,m1.`component`,m1.`iconCls`,m1.`name`,m1.`requireAuth`,m2.`component` as component2,m2.`iconCls` as iconCls2,m2.`keepAlive` as keepAlive2,m2.`name` as name2,m2.`path` as path2,m2.`requireAuth` as requireAuth2 from menu m1,menu m2 where m1.`id`=m2.`parentId` and m1.`id`!=1 and m2.`id` in(select mr.`mid` from hr_role h_r,menu_role mr where h_r.`rid`=mr.`rid` and h_r.`hrid`=#{hrId}) and m2.`enabled`=true order by m1.`id`,m2.`id`
+        SELECT
+            m1.`id`,
+            m1.`path`,
+            m1.`component`,
+            m1.`iconCls`,
+            m1.`name`,
+            m1.`requireAuth`,
+            m2.`component` AS component2,
+            m2.`iconCls` AS iconCls2,
+            m2.`keepAlive` AS keepAlive2,
+            m2.`name` AS name2,
+            m2.`path` AS path2,
+            m2.`requireAuth` AS requireAuth2
+        FROM
+            menu m1,
+            menu m2
+        WHERE m1.`id` = m2.`parentId`
+            AND m1.`id`!=1
+            AND m2.`id` IN (
+                SELECT mr.`mid`
+                FROM hr_role h_r, menu_role mr
+                WHERE h_r.`rid` = mr.`rid`
+                AND h_r.`hrid` = #{hrId}
+                )
+            AND m2.`enabled`=true
+            ORDER BY m1.`id`, m2.`id`
     </select>
+    -->
+
     <select id="menuTree" resultMap="BaseResultMap">
-            select m1.`id`,m1.`name`,m2.`id` as id2,m2.`name` as name2,m3.`id` as id3,m3.`name` as name3 from menu m1,menu m2,menu m3 where m1.`id`=m2.`parentId` and m2.`id`=m3.`parentId` and m3.`enabled`=true
-        </select>
+            SELECT
+                m1.`id`,
+                m1.`name`,
+                m2.`id` AS id2,
+                m2.`name` AS name2,
+                m3.`id` AS id3,
+                m3.`name` AS name3
+            FROM
+                menu m1,
+                menu m2,
+                menu m3
+            WHERE
+                m1.`id` = m2.`parentId`
+            AND m2.`id` = m3.`parentId`
+            AND m3.`enabled` = true
+     </select>
+
     <select id="getMenusByRid" resultType="Long">
-        SELECT mid from menu_role WHERE rid=#{rid}
+        SELECT
+            mid
+        FROM menu_role
+        WHERE rid = #{rid}
     </select>
 </mapper>

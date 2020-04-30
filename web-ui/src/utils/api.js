@@ -12,6 +12,11 @@ axios.interceptors.response.use(success => {
         console.log(success);
         return;
     }
+    if (success.data.msg) {
+        Message.success({
+            message: success.data.msg
+        })
+    }
     return success.data;
 }, error => {
     // http response 400 / 500
@@ -60,5 +65,37 @@ export const postKeyValueResquest = (url, params) => {
         headers: {
             'Content-Type' : 'application/x-www-form-urlencoded'
         }
+    });
+}
+
+export const postRequest = (url, params) => {
+    return axios ({
+       method: 'post',
+       url: `${base}${url}`,
+       data: params
+    });
+}
+
+export const putRequest = (url, params) => {
+    return axios ({
+        method: 'put',
+        url: `${base}${url}`,
+        data: params
+    });
+}
+
+export const getRequest = (url, params) => {
+    return axios ({
+        method: 'get',
+        url: `${base}${url}`,
+        data: params
+    });
+}
+
+export const deleteRequest = (url, params) => {
+    return axios ({
+        method: 'delete',
+        url: `${base}${url}`,
+        data: params
     });
 }
