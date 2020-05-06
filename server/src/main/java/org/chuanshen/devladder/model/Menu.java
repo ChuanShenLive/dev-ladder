@@ -10,29 +10,18 @@ import java.util.List;
 public class Menu implements Serializable {
 
     private Long id;
-
     @JsonIgnore
     private String url;
-
     private String path;
-
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     private Object component;
-
     private String name;
-
     private String iconCls;
-
     @JsonIgnore
     private Long parentId;
-
     private Meta meta;
-
     private Boolean enabled;
-
     @JsonIgnore
     private List<Role> roles;
-
     private List<Menu> children;
-
 }
