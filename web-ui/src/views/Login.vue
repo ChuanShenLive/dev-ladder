@@ -34,9 +34,9 @@
             submitLogin() {
                 this.$refs.loginForm.validate((valid) => {
                     if(valid) {
-                        this.postKeyValueResquest('/login', this.loginForm).then(resp => {
+                        this.postKeyValueResquest('/doLogin', this.loginForm).then(resp => {
                             if (resp) {
-                                window.sessionStorage.setItem("user", JSON.stringify(resp.obj));
+                                window.sessionStorage.setItem("user", JSON.stringify(resp));
                                 this.$router.replace('/home');
                             }
                         })

@@ -10,6 +10,7 @@ import {postKeyValueResquest} from "./utils/api";
 import {putRequest} from "./utils/api";
 import {deleteRequest} from "./utils/api";
 import {getRequest} from "./utils/api";
+import {initMenu} from "./utils/menus";
 
 Vue.prototype.postRequest = postRequest;
 Vue.prototype.postKeyValueResquest = postKeyValueResquest;
@@ -19,6 +20,16 @@ Vue.prototype.getRequest = getRequest;
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
+
+
+router.beforeEach((to, from, next) => {
+  if(to.path == '/') {
+    next();
+  } else {
+    initMenu(router, store);
+    next();
+  }
+})
 
 new Vue({
   router,

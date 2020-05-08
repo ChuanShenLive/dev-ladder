@@ -17,7 +17,7 @@ axios.interceptors.response.use(success => {
             message: success.data.msg
         })
     }
-    return success.data;
+    return success.data.obj;
 }, error => {
     // http response 400 / 500
     if (error.response.status == 504 || error.response.status == 404) {
