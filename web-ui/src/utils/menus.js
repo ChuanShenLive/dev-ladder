@@ -7,6 +7,7 @@ export const initMenu = (router, store) => {
     getRequest("/system/config/menu").then(data => {
         if (data) {
             let fmtRoutes = formatRoutes(data);
+            console.log(fmtRoutes);
             router.addRoutes(fmtRoutes);
             store.commit('initRoutes', fmtRoutes);
         }
@@ -34,16 +35,18 @@ export const formatRoutes = (routes) => {
             meta: meta,
             children: children,
             component: () => {
-                if (component.startsWith("Emp")) {
-                    import('../views/emp/' + component + '.vue');
+                if (component.startsWith("Home")) {
+                    return import('../views/' + component + '.vue');
+                } else if (component.startsWith("Emp")) {
+                    return import('../views/emp/' + component + '.vue');
                 } else if (component.startsWith("Per")) {
-                    import('../views/per/' + component + '.vue');
+                    return import('../views/per/' + component + '.vue');
                 } else if (component.startsWith("Sal")) {
-                    import('../views/sal/' + component + '.vue');
+                    return import('../views/sal/' + component + '.vue');
                 } else if (component.startsWith("sta")) {
-                    import('../views/sta/' + component + '.vue');
+                    return import('../views/sta/' + component + '.vue');
                 } else if (component.startsWith("sys")) {
-                    import('../views/sys/' + component + '.vue');
+                    return import('../views/sys/' + component + '.vue');
                 }
             }
             /*

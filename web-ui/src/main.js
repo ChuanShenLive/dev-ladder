@@ -12,6 +12,8 @@ import {deleteRequest} from "./utils/api";
 import {getRequest} from "./utils/api";
 import {initMenu} from "./utils/menus";
 
+import 'font-awesome/css/font-awesome.min.css'
+
 Vue.prototype.postRequest = postRequest;
 Vue.prototype.postKeyValueResquest = postKeyValueResquest;
 Vue.prototype.putRequest = putRequest;
