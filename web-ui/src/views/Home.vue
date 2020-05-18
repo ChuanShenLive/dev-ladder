@@ -69,6 +69,7 @@
                         this.getRequest("/logout");
                         window.sessionStorage.removeItem("user");
                         this.$store.commit('initRoutes', []);
+                        console.log(this.$router)
                         this.$router.replace("/");
                     }).catch(() => {
                         this.$message({

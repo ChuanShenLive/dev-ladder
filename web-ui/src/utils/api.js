@@ -9,7 +9,6 @@ axios.interceptors.response.use(success => {
         Message.error({
             message: success.data.msg,
         });
-        console.log(success);
         return;
     }
     if (success.data.msg) {
@@ -58,8 +57,6 @@ export const postKeyValueResquest = (url, params) => {
             for (let i in data) {
                 ret += encodeURIComponent(i) + '=' + encodeURIComponent(data[i]) + '&';
             }
-            console.log(data);
-            console.log(ret);
             return ret;
         }],
         headers: {
