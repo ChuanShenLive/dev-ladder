@@ -1,6 +1,8 @@
 package org.chuanshen.devladder.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.chuanshen.devladder.filter.CustomUrlDecisionManager;
+import org.chuanshen.devladder.filter.CustomFilterInvocationSecurityMetadataSource;
 import org.chuanshen.devladder.model.Hr;
 import org.chuanshen.devladder.model.RespBean;
 import org.chuanshen.devladder.service.UserService;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -36,6 +40,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     UserService userService;
 
+    @Autowired
+    CustomFilterInvocationSecurityMetadataSource customFilterInvocationSecurityMetadataSource;
+
+    @Autowired
+    CustomUrlDecisionManager customUrlDecisionManager;
+
     @Bean
     PasswordEncoder passwordEncoder () {
         // return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -51,6 +61,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
+                    .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                        @Override
+                        public <O extends FilterSecurityInterceptor> O postProcess(O object) {
+                            object.setAccessDecisionManager(customUrlDecisionManager);
+                            object.setSecurityMetadataSource(customFilterInvocationSecurityMetadataSource);
+                            return object;
+                        }
+                    })
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()

@@ -21,6 +21,7 @@ public class Menu implements Serializable {
     private Long parentId;
     private Meta meta;
     private Boolean enabled;
+
     @JsonIgnore
     private List<Role> roles;
     private List<Menu> children;

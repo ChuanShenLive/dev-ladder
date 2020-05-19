@@ -2,9 +2,13 @@ package org.chuanshen.devladder.service;
 
 import org.chuanshen.devladder.mapper.MenuMapper;
 import org.chuanshen.devladder.model.Hr;
+import org.chuanshen.devladder.model.Menu;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Auther: Chuan Shen
@@ -20,5 +24,10 @@ public class MenuService {
 
     public Object getMenusByHrId() {
         return menuMapper.getMenusByHrId(((Hr) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId());
+    }
+
+    // @Cacheable
+    public List<Menu> getAllMenusWithRole() {
+        return menuMapper.getAllMenuWithRole();
     }
 }

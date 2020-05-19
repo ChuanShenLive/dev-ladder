@@ -18,22 +18,28 @@
             <result column="keepAlive" property="keepAlive" jdbcType="BIT"/>
             <result column="requireAuth" property="requireAuth" jdbcType="BIT"/>
         </association>
+    </resultMap>
+    
+    <resultMap id="MenuWithRole" type="org.chuanshen.devladder.model.Menu" extends="BaseResultMap">
         <collection property="roles" ofType="org.chuanshen.devladder.model.Role">
-            <id column="rid" property="id"/>
-            <result column="rname" property="name"/>
-            <result column="rnamezh" property="nameZh"/>
+            <id column="role.id" property="id"/>
+            <result column="role.name" property="name"/>
+            <result column="role.nameZh" property="nameZh"/>
         </collection>
+    </resultMap>
+
+    <resultMap id="MenuWithChildren" type="org.chuanshen.devladder.model.Menu" extends="BaseResultMap">
         <collection property="children" ofType="org.chuanshen.devladder.model.Menu">
-            <id column="children.id" property="id"/>
-            <result column="children.url" property="url" jdbcType="VARCHAR"/>
-            <result column="children.path" property="path" jdbcType="VARCHAR"/>
-            <result column="children.component" property="component" javaType="java.lang.Object"/>
-            <result column="children.name" property="name" jdbcType="VARCHAR"/>
-            <result column="children.iconCls" property="iconCls" jdbcType="VARCHAR"/>
-            <result column="children.enabled" property="enabled" jdbcType="BIT"/>
+            <id column="child.id" property="id"/>
+            <result column="child.url" property="url" jdbcType="VARCHAR"/>
+            <result column="child.path" property="path" jdbcType="VARCHAR"/>
+            <result column="child.component" property="component" javaType="java.lang.Object"/>
+            <result column="child.name" property="name" jdbcType="VARCHAR"/>
+            <result column="child.iconCls" property="iconCls" jdbcType="VARCHAR"/>
+            <result column="child.enabled" property="enabled" jdbcType="BIT"/>
             <association property="meta" javaType="org.chuanshen.devladder.model.Meta">
-                <result column="children.keepAlive" property="keepAlive"/>
-                <result column="children.requireAuth" property="requireAuth"/>
+                <result column="child.keepAlive" property="keepAlive"/>
+                <result column="child.requireAuth" property="requireAuth"/>
             </association>
             <collection property="children" ofType="org.chuanshen.devladder.model.Menu">
                 <id column="id3" property="id"/>
@@ -42,7 +48,7 @@
         </collection>
     </resultMap>
 
-    <sql id="Base_Column_list">
+    <sql id="Base_Column_List">
         m.`id` AS 'id',
         m.`url` AS 'url',
         m.`path` AS 'path',
@@ -54,7 +60,7 @@
         m.`enabled` AS 'enabled'
     </sql>
 
-    <sql id="Dep_Column_list">
+    <sql id="Dep_Column_List">
         ${alias}.`id` AS '${as}.id',
         ${alias}.`url` AS '${as}.url',
         ${alias}.`path` AS '${as}.path',
@@ -66,12 +72,26 @@
         ${alias}.`enabled` AS '${as}.enabled'
     </sql>
 
-    <select id="getAllMenu" resultMap="BaseResultMap">
+    <sql id="With_Role_List">
+        ${alias}.`id` AS '${as}.id',
+        ${alias}.`name` AS '${as}.name',
+        ${alias}.`nameZh` AS '${as}.nameZh'
+    </sql>
+
+    <select id="getAllMenuWithRole" resultMap="MenuWithRole">
         SELECT
-            m.*,
-            r.`id` AS rid,
-            r.`name` AS rname,
-            r.`nameZh` AS rnamezh
+            <include refid="Base_Column_List" />,
+            <include refid="With_Role_List"><property name="alias" value="r"/><property name="as" value="role"/></include>
+        FROM menu m
+            INNER JOIN menu_role mr ON m.id = mr.mid
+            INNER JOIN role r ON mr.rid = r.id
+        ORDER BY m.`id`
+    </select>
+
+    <select id="getAllMenu" resultMap="MenuWithRole">
+        SELECT
+            <include refid="Base_Column_List" />,
+            <include refid="With_Role_List"><property name="alias" value="r"/><property name="as" value="role"/></include>
         FROM menu m
             LEFT JOIN menu_role mr ON m.`id`=mr.`mid`
             LEFT JOIN role r ON mr.`rid`=r.`id`
@@ -79,10 +99,10 @@
         ORDER BY m.`id` DESC
     </select>
 
-    <select id="getMenusByHrId" parameterType="Long" resultMap="BaseResultMap">
+    <select id="getMenusByHrId" parameterType="Long" resultMap="MenuWithChildren">
         SELECT DISTINCT
-            <include refid="Base_Column_list" />,
-        <include refid="Dep_Column_list"><property name="alias" value="m2"/><property name="as" value="children"/></include>
+            <include refid="Base_Column_List" />,
+            <include refid="Dep_Column_List"><property name="alias" value="m2"/><property name="as" value="child"/></include>
         FROM menu m
         LEFT JOIN menu m2 ON m.id = m2.parentId
         LEFT JOIN menu_role mr ON mr.mid = m2.id
@@ -95,7 +115,7 @@
             'children.id'
     </select>
 
-    <select id="menuTree" resultMap="BaseResultMap">
+    <select id="menuTree" resultMap="MenuWithChildren">
             SELECT
                 m1.`id`,
                 m1.`name`,
@@ -119,4 +139,5 @@
         FROM menu_role
         WHERE rid = #{rid}
     </select>
+
 </mapper>
