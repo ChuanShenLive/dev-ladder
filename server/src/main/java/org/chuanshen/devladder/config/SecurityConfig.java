@@ -140,10 +140,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         RespBean respBean = RespBean.error("访问失败!");
                         if (authException instanceof InsufficientAuthenticationException) {
                             respBean.setMsg("非法请求失败, 请联系管理员.");
+                        }
                         out.write(new ObjectMapper().writeValueAsString(respBean));
                         out.flush();
                         out.close();
                     }
-        });
+                });
     }
 }

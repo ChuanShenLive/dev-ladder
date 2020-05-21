@@ -44,7 +44,7 @@
                     <div class="homeWelcome" v-if="this.$router.currentRoute.path === '/home'">
                         欢迎使用开发过墙梯!
                     </div>
-                    <router-view/>
+                    <router-view class="homeRouterView"/>
                 </el-main>
                 <!-- End Page Main -->
 
@@ -93,6 +93,10 @@
 </script>
 
 <style>
+    .homeRouterView {
+        margin-top: 10px;
+    }
+
     .homeWelcome {
         text-align: center;
         font-size: 30px;

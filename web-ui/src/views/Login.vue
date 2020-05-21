@@ -37,7 +37,8 @@
                         this.postKeyValueResquest('/doLogin', this.loginForm).then(resp => {
                             if (resp) {
                                 window.sessionStorage.setItem("user", JSON.stringify(resp));
-                                this.$router.replace('/home');
+                                let redirect = this.$route.query.redirect;
+                                this.$router.replace((redirect =='/' || redirect == undefined) ? '/home' : redirect);
                             }
                         })
                         //alert('submit!');

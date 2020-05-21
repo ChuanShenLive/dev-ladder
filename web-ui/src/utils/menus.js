@@ -42,9 +42,9 @@ export const formatRoutes = (routes) => {
                     return import('../views/per/' + component + '.vue');
                 } else if (component.startsWith("Sal")) {
                     return import('../views/sal/' + component + '.vue');
-                } else if (component.startsWith("sta")) {
+                } else if (component.startsWith("Sta")) {
                     return import('../views/sta/' + component + '.vue');
-                } else if (component.startsWith("sys")) {
+                } else if (component.startsWith("Sys")) {
                     return import('../views/sys/' + component + '.vue');
                 }
             }
