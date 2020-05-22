@@ -1,4 +1,4 @@
-package org.chuanshen.devladder.controller;
+package org.chuanshen.devladder.controller.config;
 
 import org.chuanshen.devladder.model.RespBean;
 import org.chuanshen.devladder.service.MenuService;

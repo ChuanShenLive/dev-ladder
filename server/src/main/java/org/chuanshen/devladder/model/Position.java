@@ -1,23 +1,23 @@
 package org.chuanshen.devladder.model;
 
-import java.sql.Timestamp;
+import lombok.Data;
 
+// import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Objects;
+
+@Data
 public class Position {
     private Long id;
     private String name;
-    private Timestamp createDate;
-
-    public Position() {
-    }
+    private Date createDate;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Position position = (Position) o;
-
-        return name != null ? name.equals(position.name) : position.name == null;
+        return Objects.equals(name, position.name);
     }
 
     @Override
@@ -25,32 +25,13 @@ public class Position {
         return name != null ? name.hashCode() : 0;
     }
 
+    public Position() {
+
+    }
+
     public Position(String name) {
 
         this.name = name;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Timestamp getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Timestamp createDate) {
-        this.createDate = createDate;
-    }
 }
