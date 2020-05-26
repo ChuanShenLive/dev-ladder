@@ -69,7 +69,6 @@
         methods: {
             commandHandler(cmd) {
                 if (cmd == 'logout') {
-                    console.log(this.$route);
                     this.$confirm('此操作将注销登录, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
@@ -78,7 +77,6 @@
                         this.getRequest("/logout");
                         window.sessionStorage.removeItem("user");
                         this.$store.commit('initRoutes', []);
-                        console.log(this.$router)
                         this.$router.replace("/");
                     }).catch(() => {
                         this.$message({

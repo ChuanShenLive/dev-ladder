@@ -5,6 +5,7 @@ import org.chuanshen.devladder.model.Position;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,7 +23,16 @@ public class PositionService {
     }
 
     public Integer addPosition(Position position) {
-
+        position.setEnabled(true);
+        position.setCreateDate(new Date());
         return positionMapper.addPos(position);
+    }
+
+    public Integer updatePosition(Position position) {
+        return positionMapper.updateByPrimaryKeySelective(position);
+    }
+
+    public Integer deletePositionById(Integer id) {
+        return positionMapper.deleteByPrimaryKey(id);
     }
 }

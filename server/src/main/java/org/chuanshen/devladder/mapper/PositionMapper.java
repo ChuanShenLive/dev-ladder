@@ -18,4 +18,14 @@ public interface PositionMapper {
     int deletePosById(@Param("pids") String[] pids);
 
     int updatePosById(@Param("pos") Position position);
+
+    int insert(Position record);
+
+    int insertSelective(Position record);
+
+    int updateByPrimaryKeySelective(Position record);
+
+    int updateByPrimaryKey(Position record);
+
+    int deleteByPrimaryKey(Integer id);
 }

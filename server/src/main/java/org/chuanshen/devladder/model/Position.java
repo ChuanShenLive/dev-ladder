@@ -11,6 +11,7 @@ public class Position {
     private Long id;
     private String name;
     private Date createDate;
+    private Boolean enabled;
 
     @Override
     public boolean equals(Object o) {
