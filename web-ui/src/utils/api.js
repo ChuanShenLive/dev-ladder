@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { Message } from 'element-ui';
-import en from "element-ui/src/locale/lang/en";
+import {Message} from 'element-ui';
 
 axios.interceptors.response.use(success => {
     // http response 200

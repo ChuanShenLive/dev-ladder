@@ -1,5 +1,6 @@
 package org.chuanshen.devladder.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 // import java.sql.Timestamp;
@@ -10,6 +11,7 @@ import java.util.Objects;
 public class Position {
     private Long id;
     private String name;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     private Date createDate;
     private Boolean enabled;
 
