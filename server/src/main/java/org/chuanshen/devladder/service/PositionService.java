@@ -35,4 +35,8 @@ public class PositionService {
     public Integer deletePositionById(Integer id) {
         return positionMapper.deleteByPrimaryKey(id);
     }
+
+    public Integer deletePositionsByIds(Integer[] ids) {
+        return positionMapper.deletePositionsByIds(ids);
+    }
 }

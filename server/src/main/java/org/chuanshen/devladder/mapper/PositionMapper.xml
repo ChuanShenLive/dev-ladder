@@ -111,4 +111,10 @@
     delete from position
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <delete id="deletePositionsByIds">
+      DELETE FROM position WHERE id IN
+      <foreach collection="ids" item="id" separator="," open="(" close=")">
+          #{id}
+      </foreach>
+  </delete>
 </mapper>

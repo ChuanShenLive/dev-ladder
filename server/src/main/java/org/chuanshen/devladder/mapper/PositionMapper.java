@@ -28,4 +28,6 @@ public interface PositionMapper {
     int updateByPrimaryKey(Position record);
 
     int deleteByPrimaryKey(Integer id);
+
+    Integer deletePositionsByIds(@Param("ids") Integer[] pids);
 }
