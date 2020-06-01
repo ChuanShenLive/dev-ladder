@@ -3,13 +3,47 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.chuanshen.devladder.mapper.RoleMapper">
+
+    <resultMap id="BaseResultMap" type="org.chuanshen.devladder.model.Role">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="nameZh" property="nameZh" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        r.`id` AS 'id',
+        r.`name` AS 'name',
+        r.`nameZh` AS 'nameZh'
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM role r
+        WHERE id = #{id, jdbcType=INTEGER}
+    </select>
+
+    <select id="getAllRoles" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM role r
+    </select>
+
     <select id="roles" resultType="org.chuanshen.devladder.model.Role">
         SELECT * FROM role where id!=6;
     </select>
+
     <insert id="addNewRole">
         INSERT INTO role set name=#{role},nameZh=#{roleZh}
     </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        DELETE FROM role
+        WHERE id = #{id, jdbcType=INTEGER}
+    </delete>
+
     <delete id="deleteRoleById" parameterType="Long">
         DELETE FROM role WHERE id=#{rid}
     </delete>
+
 </mapper>

@@ -8,9 +8,16 @@ import java.util.List;
 
 @Component
 public interface RoleMapper {
+
+    Role selectByPrimaryKey(Long id);
+
+    List<Role> getAllRoles();
+
     List<Role> roles();
 
     int addNewRole(@Param("role") String role, @Param("roleZh") String roleZh);
+
+    int deleteByPrimaryKey(Long id);
 
     int deleteRoleById(Long rid);
 }
