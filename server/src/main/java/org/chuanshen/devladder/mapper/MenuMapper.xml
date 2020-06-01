@@ -56,7 +56,7 @@
         m.`name` AS 'name',
         m.`iconCls` AS 'iconCls',
         m.`keepAlive` AS 'keepAlive',
-        m.`requireAuth` AS 'requreAuth',
+        m.`requireAuth` AS 'requireAuth',
         m.`enabled` AS 'enabled'
     </sql>
 

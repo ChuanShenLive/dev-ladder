@@ -33,7 +33,7 @@
     </select>
 
     <select id="getAllPos" resultType="org.chuanshen.devladder.model.Position">
-        SELECT * FROM position WHERE enabled=true ORDER BY id;
+        SELECT * FROM position /*WHERE enabled=true*/ ORDER BY id;
     </select>
 
     <delete id="deletePosById">
