@@ -19,7 +19,7 @@
             <result column="requireAuth" property="requireAuth" jdbcType="BIT"/>
         </association>
     </resultMap>
-    
+
     <resultMap id="MenuWithRole" type="org.chuanshen.devladder.model.Menu" extends="BaseResultMap">
         <collection property="roles" ofType="org.chuanshen.devladder.model.Role">
             <id column="role.id" property="id"/>
@@ -42,8 +42,8 @@
                 <result column="child.requireAuth" property="requireAuth"/>
             </association>
             <collection property="children" ofType="org.chuanshen.devladder.model.Menu">
-                <id column="id3" property="id"/>
-                <result column="name3" property="name" jdbcType="VARCHAR"/>
+                <id column="grandchild.id" property="id"/>
+                <result column="grandchild.name" property="name" jdbcType="VARCHAR"/>
             </collection>
         </collection>
     </resultMap>
@@ -80,39 +80,63 @@
 
     <select id="getAllMenuWithRole" resultMap="MenuWithRole">
         SELECT
-            <include refid="Base_Column_List" />,
-            <include refid="With_Role_List"><property name="alias" value="r"/><property name="as" value="role"/></include>
+        <include refid="Base_Column_List"/>,
+        <include refid="With_Role_List">
+            <property name="alias" value="r"/>
+            <property name="as" value="role"/>
+        </include>
         FROM menu m
-            INNER JOIN menu_role mr ON m.id = mr.mid
-            INNER JOIN role r ON mr.rid = r.id
+        INNER JOIN menu_role mr ON m.id = mr.mid
+        INNER JOIN role r ON mr.rid = r.id
         ORDER BY m.`id`
     </select>
 
     <select id="getAllMenu" resultMap="MenuWithRole">
         SELECT
-            <include refid="Base_Column_List" />,
-            <include refid="With_Role_List"><property name="alias" value="r"/><property name="as" value="role"/></include>
+        <include refid="Base_Column_List"/>,
+        <include refid="With_Role_List">
+            <property name="alias" value="r"/>
+            <property name="as" value="role"/>
+        </include>
         FROM menu m
-            LEFT JOIN menu_role mr ON m.`id`=mr.`mid`
-            LEFT JOIN role r ON mr.`rid`=r.`id`
+        LEFT JOIN menu_role mr ON m.`id`=mr.`mid`
+        LEFT JOIN role r ON mr.`rid`=r.`id`
         WHERE m.`enabled`=true
         ORDER BY m.`id` DESC
     </select>
 
+    <select id="getAllMenus" resultMap="MenuWithChildren">
+        SELECT
+               m.`id`    AS 'id',
+               m.`name`  AS 'name',
+               m2.`id`   AS 'child.id',
+               m2.`name` AS 'child.name',
+               m3.`id`   AS 'grandchild.id',
+               m3.`name` AS 'grandchild.name'
+        FROM menu m
+        INNER JOIN menu m2 ON m.id = m2.parentId
+        INNER JOIN menu m3 ON m2.id = m3.parentId
+        WHERE m3.`enabled` = true
+        ORDER BY 'id', 'child.id', 'grandchild.id'
+    </select>
+
     <select id="getMenusByHrId" parameterType="Long" resultMap="MenuWithChildren">
         SELECT DISTINCT
-            <include refid="Base_Column_List" />,
-            <include refid="Dep_Column_List"><property name="alias" value="m2"/><property name="as" value="child"/></include>
+        <include refid="Base_Column_List"/>,
+        <include refid="Dep_Column_List">
+            <property name="alias" value="m2"/>
+            <property name="as" value="child"/>
+        </include>
         FROM menu m
         LEFT JOIN menu m2 ON m.id = m2.parentId
         LEFT JOIN menu_role mr ON mr.mid = m2.id
         LEFT JOIN hr_role hrr ON hrr.rid = mr.rid
         WHERE
-                hrr.hrid = #{hrId}
-            AND m2.enabled = TRUE
+        hrr.hrid = #{hrId}
+        AND m2.enabled = TRUE
         ORDER BY
-            'id',
-            'children.id'
+        'id',
+        'children.id'
     </select>
 
     <select id="menuTree" resultMap="MenuWithChildren">
