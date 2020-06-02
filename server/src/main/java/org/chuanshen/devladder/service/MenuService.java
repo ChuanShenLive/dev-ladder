@@ -34,4 +34,8 @@ public class MenuService {
     public List<Menu> getAllMenus() {
         return menuMapper.getAllMenus();
     }
+
+    public List<Long> getMidsByRid(Long rid) {
+        return menuMapper.getMidsByRid(rid);
+    }
 }

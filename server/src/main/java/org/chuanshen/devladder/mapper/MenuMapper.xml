@@ -157,7 +157,7 @@
             AND m3.`enabled` = true
      </select>
 
-    <select id="getMenusByRid" resultType="Long">
+    <select id="getMidsByRid" resultType="java.lang.Long">
         SELECT
             mid
         FROM menu_role

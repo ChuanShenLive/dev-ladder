@@ -5,10 +5,7 @@ import org.chuanshen.devladder.model.Role;
 import org.chuanshen.devladder.service.MenuService;
 import org.chuanshen.devladder.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,5 +32,10 @@ public class PermissionController {
     @GetMapping("/menus")
     public List<Menu> getAllMenus() {
         return menuService.getAllMenus();
+    }
+
+    @GetMapping("/mids/{rid}")
+    public List<Long> getMidsByRid(@PathVariable Long rid) {
+        return menuService.getMidsByRid(rid);
     }
 }
