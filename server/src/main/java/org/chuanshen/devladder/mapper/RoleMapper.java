@@ -20,4 +20,6 @@ public interface RoleMapper {
     int deleteByPrimaryKey(Long id);
 
     int deleteRoleById(Long rid);
+
+    int addRole(Role role);
 }
