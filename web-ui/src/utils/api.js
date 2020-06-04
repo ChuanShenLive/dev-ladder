@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {Message} from 'element-ui';
+import router from "../router";
 
 axios.interceptors.response.use(success => {
     // http response 200
@@ -29,10 +30,11 @@ axios.interceptors.response.use(success => {
         Message.error({
             message: '权限不足, 请联系管理员, ㄟ( ▔, ▔ )ㄏ！'
         });
-    } else if (error.response.status == 403) {
+    } else if (error.response.status == 401) {
         Message.error({
             message: '尚未登录, 请先登录, <(￣︶￣)↗[Login!]！'
         });
+        router.replace('/');
     } else {
         if (error.response.data.msg) {
             Message.error({

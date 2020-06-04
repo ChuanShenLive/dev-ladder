@@ -15,4 +15,6 @@ public interface DepartmentMapper {
     List<Department> getDepByPid(Long pid);
 
     List<Department> getAllDeps();
+
+    List<Department> getAllDepartmentsByParentId(Long pid);
 }
