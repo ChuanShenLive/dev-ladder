@@ -18,6 +18,6 @@ public class DepartmentService {
     DepartmentMapper departmentMapper;
 
     public List<Department> getAllDepartments() {
-        return departmentMapper.getAllDepartmentsByParentId(-1L);
+        return departmentMapper.getDepByPid(-1L);
     }
 }

@@ -25,6 +25,9 @@
         d.`isParent` AS 'isParent'
     </sql>
 
+    <select id="getAllDepartmentsByParentId" resultMap="BaseResultMap">
+        SELECT * FROM department WHERE parentId = #{pid}
+    </select>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
         SELECT
             <include refid="Base_Column_List" />
@@ -40,8 +43,6 @@
     </select>
 
     <select id="getDepByPid" resultMap="BaseResultMap">
-/*        SELECT d1.*
-        FROM department d1 where d1.`parentId`=#{pid} AND d1.enabled=true;*/
         SELECT
             <include refid="Base_Column_List" />
         FROM department d
