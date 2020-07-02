@@ -4,26 +4,74 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.chuanshen.devladder.mapper.DepartmentMapper">
+    <resultMap id="BaseResultMap" type="org.chuanshen.devladder.model.Department">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="parentId" property="parentId" jdbcType="INTEGER" />
+        <result column="depPath" property="depPath" jdbcType="VARCHAR" />
+        <result column="enabled" property="enabled" jdbcType="BIT" />
+        <result column="isParent" property="isParent" jdbcType="BIT" />
+        <collection property="children" ofType="org.chuanshen.devladder.model.Department"
+                    select="org.chuanshen.devladder.mapper.DepartmentMapper.getDepByPid" column="id">
+        </collection>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        d.`id` AS 'id',
+        d.`name` AS 'name',
+        d.`parentId` AS 'parentId',
+        d.`depPath` AS 'depPath',
+        d.`enabled` AS 'enabled',
+        d.`isParent` AS 'isParent'
+    </sql>
+
+    <select id="getAllDepartmentsByParentId" resultMap="BaseResultMap">
+        SELECT * FROM department WHERE parentId = #{pid}
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM department d
+    </select>
+
     <select id="addDep" statementType="CALLABLE">
-        call addDep(#{dep.name,mode=IN,jdbcType=VARCHAR},#{dep.parentId,mode=IN,jdbcType=INTEGER},#{dep.enabled,mode=IN,jdbcType=BOOLEAN},#{dep.result,mode=OUT,jdbcType=INTEGER},#{dep.id,mode=OUT,jdbcType=BIGINT})
+        call addDep(
+            #{dep.name,mode=IN,jdbcType=VARCHAR},
+            #{dep.parentId,mode=IN,jdbcType=INTEGER},
+            #{dep.enabled,mode=IN,jdbcType=BOOLEAN},
+            #{dep.result,mode=OUT,jdbcType=INTEGER},
+            #{dep.id,mode=OUT,jdbcType=BIGINT}
+        )
     </select>
 
     <select id="deleteDep" statementType="CALLABLE">
-        call deleteDep(#{dep.id,mode=IN,jdbcType=INTEGER},#{dep.result,mode=OUT,jdbcType=INTEGER})
+        call deleteDep(
+            #{dep.id,mode=IN,jdbcType=INTEGER},
+            #{dep.result,mode=OUT,jdbcType=INTEGER}
+        )
     </select>
 
-    <resultMap id="BaseResultMap" type="org.chuanshen.devladder.model.Department">
-        <id property="id" column="id"/>
-        <result column="name" property="name"/>
-        <result column="parentId" property="parentId"/>
-        <result column="isParent" property="isParent"/>
-        <collection property="children" ofType="org.chuanshen.devladder.model.Department" select="org.chuanshen.devladder.mapper.DepartmentMapper.getDepByPid" column="id">
-        </collection>
-    </resultMap>
     <select id="getDepByPid" resultMap="BaseResultMap">
-        select d1.*from department d1 where d1.`parentId`=#{pid} AND d1.enabled=true;
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM department d
+        WHERE d.`parentId` = #{pid}
+        AND d.`enabled` = true;
     </select>
+
     <select id="getAllDeps" resultType="org.chuanshen.devladder.model.Department">
-        select * from department WHERE enabled=true;
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM department d
+        WHERE d.`enabled` = true;
     </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        DELETE FROM department
+        WHERE id = #{id, jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insert" parameterType="org.chuanshen.devladder.model.Department">
+        insert into department (`id`, `name`, `parentId`, `depPath`, `enabled`, )
+    </insert>
 </mapper>
