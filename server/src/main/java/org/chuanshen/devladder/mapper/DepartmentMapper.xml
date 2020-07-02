@@ -35,11 +35,20 @@
     </select>
 
     <select id="addDep" statementType="CALLABLE">
-        call addDep(#{dep.name,mode=IN,jdbcType=VARCHAR},#{dep.parentId,mode=IN,jdbcType=INTEGER},#{dep.enabled,mode=IN,jdbcType=BOOLEAN},#{dep.result,mode=OUT,jdbcType=INTEGER},#{dep.id,mode=OUT,jdbcType=BIGINT})
+        call addDep(
+            #{dep.name,mode=IN,jdbcType=VARCHAR},
+            #{dep.parentId,mode=IN,jdbcType=INTEGER},
+            #{dep.enabled,mode=IN,jdbcType=BOOLEAN},
+            #{dep.result,mode=OUT,jdbcType=INTEGER},
+            #{dep.id,mode=OUT,jdbcType=BIGINT}
+        )
     </select>
 
     <select id="deleteDep" statementType="CALLABLE">
-        call deleteDep(#{dep.id,mode=IN,jdbcType=INTEGER},#{dep.result,mode=OUT,jdbcType=INTEGER})
+        call deleteDep(
+            #{dep.id,mode=IN,jdbcType=INTEGER},
+            #{dep.result,mode=OUT,jdbcType=INTEGER}
+        )
     </select>
 
     <select id="getDepByPid" resultMap="BaseResultMap">

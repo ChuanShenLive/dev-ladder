@@ -20,4 +20,13 @@ public class DepartmentService {
     public List<Department> getAllDepartments() {
         return departmentMapper.getDepByPid(-1L);
     }
+
+    public void addDep(Department dep) {
+        dep.setEnabled(true);
+        departmentMapper.addDep(dep);
+    }
+
+    public void deleteDep(Department dep) {
+        departmentMapper.deleteDep(dep);
+    }
 }

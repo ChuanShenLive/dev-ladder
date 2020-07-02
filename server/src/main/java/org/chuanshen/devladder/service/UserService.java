@@ -2,11 +2,14 @@ package org.chuanshen.devladder.service;
 
 import org.chuanshen.devladder.mapper.HrMapper;
 import org.chuanshen.devladder.model.Hr;
+import org.chuanshen.devladder.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Auther: Chuan Shen
@@ -26,5 +29,13 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("用户名不存在!");
         }
         return hr;
+    }
+
+    public List<Hr> getAllHrs() {
+        return hrMapper.getAllHr(UserUtils.getCurrentUser().getId());
+    }
+
+    public Integer updateUser(Hr hr) {
+        return hrMapper.updateHr(hr);
     }
 }
