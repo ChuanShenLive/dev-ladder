@@ -1,12 +1,18 @@
 <template>
     <div>
-        <el-form :model="loginForm" ref="loginForm" :rules="rules" class="loginContainer">
+        <el-form :model="loginForm" ref="loginForm" :rules="rules" class="loginContainer"
+                 v-loading="loading"
+                 element-loading-text="正在登录..."
+                 element-loading-spinner="el-icon-loading"
+                 element-loading-backgrounding="rgba(0, 0, 0, 0.8)">
             <h3 class="loginTitle">系统登录</h3>
             <el-form-item prop="username">
-                <el-input type="text" v-model="loginForm.username" auto-complete="off" placeholder="请输入用户名" @keydown.enter.native="submitLogin"></el-input>
+                <el-input type="text" v-model="loginForm.username" auto-complete="off" placeholder="请输入用户名"
+                          @keydown.enter.native="submitLogin"></el-input>
             </el-form-item>
             <el-form-item prop="password">
-                <el-input auto-complete="off" placeholder="请输入密码" type="password" v-model="loginForm.password" @keydown.enter.native="submitLogin"></el-input>
+                <el-input auto-complete="off" placeholder="请输入密码" type="password" v-model="loginForm.password"
+                          @keydown.enter.native="submitLogin"></el-input>
             </el-form-item>
             <el-checkbox class="loginRemember" v-model="checked"></el-checkbox>
             <el-button style="width: 100%;" type="primary" @click="submitLogin">登录</el-button>
@@ -19,6 +25,7 @@
         name: "Login",
         data() {
             return {
+                loading: false,
                 loginForm: {
                     username: 'admin',
                     password: '123'
@@ -34,7 +41,9 @@
             submitLogin() {
                 this.$refs.loginForm.validate((valid) => {
                     if(valid) {
+                        this.loading = true;
                         this.postKeyValueResquest('/doLogin', this.loginForm).then(resp => {
+                            this.loading = false;
                             if (resp) {
                                 window.sessionStorage.setItem("user", JSON.stringify(resp));
                                 let redirect = this.$route.query.redirect;
