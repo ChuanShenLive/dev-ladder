@@ -131,8 +131,14 @@
         FROM hr h
         LEFT JOIN hr_role hrr ON h.id = hrr.hrid
         LEFT JOIN role r ON hrr.rid = r.id
-        <if test="currentId!=null">
-            WHERE h.id !=#{currentId}
-        </if>
+        <where>
+            <if test="currentId!=null">
+                h.id !=#{currentId}
+            </if>
+            <if test="keywords!='all' and keywords!=''">
+                AND h.`name` LIKE concat('%',#{keywords},'%')
+            </if>
+        </where>
+        ORDER BY h.id
     </select>
 </mapper>

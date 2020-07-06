@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,11 +32,23 @@ public class UserService implements UserDetailsService {
         return hr;
     }
 
-    public List<Hr> getAllHrs() {
-        return hrMapper.getAllHr(UserUtils.getCurrentUser().getId());
+    public List<Hr> getAllHrs(String keywords) {
+        return hrMapper.getAllHr(UserUtils.getCurrentUser().getId(), keywords);
     }
 
     public Integer updateUser(Hr hr) {
         return hrMapper.updateHr(hr);
+    }
+
+    @Transactional
+    public boolean updateUserRole(Long hrid, Long[] rids) {
+        hrMapper.deleteRoleByHrId(hrid);
+        return hrMapper.addRolesForHr(hrid, rids) == rids.length;
+    }
+
+    @Transactional
+    public Integer deleteHrById(Long id) {
+        hrMapper.deleteRoleByHrId(id);
+        return hrMapper.deleteHr(id);
     }
 }

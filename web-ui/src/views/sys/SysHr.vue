@@ -1,19 +1,21 @@
 <template>
     <div>
         <div style="margin-top: 10px; display: flex; justify-content: center;">
-            <el-input v-model="keyword"
+            <el-input v-model="keywords"
                       placeholder="通过用户名搜索用户..."
                       prefix-icon="el-icon-search"
+                      @keydown.enter.native="doSearch"
                       style="width: 400px; margin-right: 10px;">
             </el-input>
-            <el-button icon="el-icon-search" type="primary">搜 索</el-button>
+            <el-button icon="el-icon-search" type="primary" @click="doSearch">搜 索</el-button>
         </div>
         <div class="hr-container">
             <el-card class="hr-card" v-for="(hr, index) in hrs" :key="index">
                 <div slot="header" class="clearfix">
                     <span>{{hr.name}}</span>
                     <el-button style="float: right; padding: 3px 0; color: #e30007" type="text"
-                               icon="el-icon-delete"></el-button>
+                               icon="el-icon-delete" @click="deleteHr(hr)">
+                    </el-button>
                 </div>
                 <div>
                     <div class="img-container">
@@ -63,7 +65,7 @@
         name: "SysHr",
         data() {
             return {
-                keyword: '',
+                keywords: '',
                 hrs: [],
                 selectedRoles: [],
                 allRoles: [],
@@ -73,11 +75,29 @@
             this.initHrs();
         },
         methods: {
+            doSearch() {
+                this.initHrs();
+            },
             initHrs: function () {
-                this.getRequest('/system/hr/').then(resp => {
+                this.getRequest('/system/hr/?keywords=' + this.keywords).then(resp => {
                     if (resp) {
                         this.hrs = resp;
                     }
+                })
+            },
+            deleteHr(hr) {
+                this.$confirm('此操作将永久删除[' + hr.name + '], 是否继续？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: "warning"
+                }).then(() => {
+                    this.deleteRequest('/system/hr/' + hr.id).then(resp=>{
+                        if (resp) {
+                            this.initHrs();
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({type: "info", message: "已取消删除"})
                 })
             },
             showPop: function (hr) {
@@ -88,7 +108,39 @@
                     this.selectedRoles.push(r.id);
                 });
             },
-            hidePop: function(hr) {
+            hidePop: function (hr) {
+                let roles = [];
+                Object.assign(roles, hr.roles);
+                let flag = false;
+                if (roles.length != this.selectedRoles.length) {
+                    flag = true;
+                } else {
+                    for (let i = 0; i < roles.length; i++) {
+                        let role = roles[i];
+                        for (let j = 0; j < this.selectedRoles.length; j++) {
+                            let sr = this.selectedRoles[j];
+                            if (role.id == sr) {
+                                roles.splice(i, 1);
+                                i--;
+                                break;
+                            }
+                        }
+                    }
+                    if (roles.length != 0) {
+                        flag = true;
+                    }
+                }
+                if (flag) {
+                    let url = '/system/hr/role?hrid=' + hr.id;
+                    this.selectedRoles.forEach(sr => {
+                        url = url + '&rids=' + sr;
+                    })
+                    this.putRequest(url).then(resp => {
+                        if (resp) {
+                            this.initHrs();
+                        }
+                    })
+                }
 
             },
             initAllRoles: function () {
