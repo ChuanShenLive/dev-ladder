@@ -13,29 +13,34 @@ public class Employee {
     private Date birthday;
     private String idCard;
     private String wedlock;
-    @JsonIgnore
-    private Long nationId;
-    @JsonIgnore
-    private String nationName;
+//    @JsonIgnore
+//    private Long nationId;
+//    @JsonIgnore
+//    private String nationName;
+    private Nation nation;
     private String nativePlace;
-    @JsonIgnore
-    private String politicName;
-    @JsonIgnore
-    private Long politicId;
+//    @JsonIgnore
+//    private Long politicId;
+//    @JsonIgnore
+//    private String politicName;
+    private PoliticsStatus politicsStatus;
     private String email;
     private String phone;
     private String address;
-    @JsonIgnore
-    private Long departmentId;
-    @JsonIgnore
-    private String departmentName;
-    @JsonIgnore
-    private Long jobLevelId;
-    @JsonIgnore
-    private String jobLevelName;
-    @JsonIgnore
-    private Long posId;
-    private String posName;
+//    @JsonIgnore
+//    private Long departmentId;
+//    @JsonIgnore
+//    private String departmentName;
+    private Department department;
+//    @JsonIgnore
+//    private Long jobLevelId;
+//    @JsonIgnore
+//    private String jobLevelName;
+    private JobLevel jobLevel;
+//    @JsonIgnore
+//    private Long posId;
+//    private String posName;
+    private Position position;
     private String engageForm;
     private String tiptopDegree;
     private String specialty;
@@ -49,10 +54,5 @@ public class Employee {
     private Date beginContract;
     private Date endContract;
     private Integer workAge;
-    private Department department;
-    private Nation nation;
-    private JobLevel jobLevel;
-    private Position position;
-    private PoliticsStatus politicsStatus;
     private Salary salary;
 }

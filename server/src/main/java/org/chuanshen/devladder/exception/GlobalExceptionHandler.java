@@ -16,6 +16,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 public class GlobalExceptionHandler {
     @ExceptionHandler(SQLException.class)
     public RespBean SQLExceptionHandler(SQLException e) {
+        e.printStackTrace();
         if (e instanceof SQLIntegrityConstraintViolationException) {
             return RespBean.error("该数据有关联数据, 操作失败!");
         }

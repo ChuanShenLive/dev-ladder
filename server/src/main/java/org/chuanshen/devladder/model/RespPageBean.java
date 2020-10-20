@@ -15,7 +15,6 @@ public class RespPageBean {
     private List<?> data;
 
     public RespPageBean() {
-
     }
 
     public RespPageBean(Long total, List<?> data) {

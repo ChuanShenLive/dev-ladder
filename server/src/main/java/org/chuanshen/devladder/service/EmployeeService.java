@@ -20,7 +20,7 @@ public class EmployeeService {
 
     public RespPageBean getEmployeeByPage(Long page, Integer size) {
         if (page != null && size != null) {
-            page = page - 1 * size;
+            page = (page - 1) * size;
         }
 
         List<Employee> data = empMapper.getEmployeeByPage(page, size);
