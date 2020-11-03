@@ -2,9 +2,9 @@
   <div>
     <div style="display: flex; justify-content: space-between">
       <div>
-        <el-input placeholder="请输入员工名进行搜索, 可以直接按回车搜索..." prefix-icon="el-icon-search" size="mini"
-                  style="width: 300px; margin-right: 8px"></el-input>
-        <el-button icon="el-icon-search" type="primary" size="mini">搜索</el-button>
+        <el-input placeholder="请输入员工名进行搜索, 可以直接按回车搜索..." prefix-icon="el-icon-search" v-model="keyword" @clear="initEmps"
+                  @keydown.enter.native="initEmps" size="mini" clearable style="width: 300px; margin-right: 8px"></el-input>
+        <el-button icon="el-icon-search" type="primary" size="mini" @click="initEmps">搜索</el-button>
         <el-button type="primary" size="mini"><i class="fa fa-angle-double-down" aria-hidden="true">高级搜索</i></el-button>
       </div>
       <div>
@@ -14,7 +14,7 @@
       </div>
     </div>
     <div style="margin-top: 8px;">
-      <el-table :data="emps" stripe border style="width: 100%" borderv-loading="londing" element-loading-text="正在加载..." elelemt-loading-spinner="el-icon-loading" element-loading-background="rgba(0,0,0,0.8">
+      <el-table :data="emps" stripe border style="width: 100%" border v-loading="loading" element-loading-text="正在加载..." elelemt-loading-spinner="el-icon-loading" element-loading-background="rgba(0,0,0,0.8">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="name" label="姓名" width="100" fixed align="left"></el-table-column>
         <el-table-column prop="workID" label="工号" align="left" width="85"></el-table-column>
@@ -47,6 +47,11 @@
           </template>
         </el-table-column>
       </el-table>
+      <div style="display: flex; justify-content: flex-end;">
+        <el-pagination background layout="sizes, prev, pager, next, jumper, ->, total, slot" :total="total" @current-change="currentChange" @size-change="sizeChange">
+
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -58,16 +63,27 @@ export default {
     return {
       emps: [],
       total: 0,
-      londing: false,
+      loading: false,
+      page: 1,
+      size: 10,
+      keyword: '',
     }
   },
   mounted() {
     this.initEmps();
   },
   methods: {
+    sizeChange(currentSize) {
+      this.size = currentSize;
+      this.initEmps();
+    },
+    currentChange(currentPage) {
+      this.page = currentPage;
+      this.initEmps();
+    },
     initEmps() {
       this.londing = true
-      this.getRequest("/emp/basic/").then(resp=> {
+      this.getRequest("/emp/basic/?page=" + this.page + "&size=" + this.size + "&keyword=" + this.keyword).then(resp=> {
         this.londing = false;
         if(resp) {
           this.emps = resp.data;

@@ -122,6 +122,11 @@
             LEFT JOIN department d ON e.`departmentId` = d.id
             LEFT JOIN joblevel jl ON e.`jobLevelId` = jl.`id`
             LEFT JOIN position p ON e.`posId` = p.`id`
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND e.`name` LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
         LIMIT #{page}, #{size}
 <!--        WHERE e.`name` like concat('%', #{keywords}, '%')-->
 <!--        <if test="engageForm!=null and engageForm!=''">-->
@@ -151,7 +156,12 @@
     </select>
 
     <select id="getTotal" resultType="Long">
-        SELECT COUNT(*) FROM employee;
+        SELECT COUNT(*) FROM employee e
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND e.`name` LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>;
     </select>
 
     <select id="getEmployeeByPageShort" resultMap="BaseResultMap">

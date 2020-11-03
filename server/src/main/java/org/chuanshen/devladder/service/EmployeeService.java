@@ -18,13 +18,13 @@ public class EmployeeService {
     @Autowired
     EmpMapper empMapper;
 
-    public RespPageBean getEmployeeByPage(Long page, Integer size) {
+    public RespPageBean getEmployeeByPage(Long page, Integer size, String keyword) {
         if (page != null && size != null) {
             page = (page - 1) * size;
         }
 
-        List<Employee> data = empMapper.getEmployeeByPage(page, size);
-        Long total = empMapper.getTotal();
+        List<Employee> data = empMapper.getEmployeeByPage(page, size, keyword);
+        Long total = empMapper.getTotal(keyword);
         return new RespPageBean(total, data);
     }
 }
